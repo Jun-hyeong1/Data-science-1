@@ -1,7 +1,8 @@
-# 8. 빅데이터 분류분석 I: 기본개념과 로지스틱모형
+setwd('D:/Find in data/projectsbyJun_hyeong/Data Science no.1')
+getwd()
 
 install.packages(c("dplyr", "ggplot2", "ISLR", "MASS", "glmnet",
-                   "randomForest", "gbm", "rpart", "boot"))
+                   "randomForest", "gbm", "rpart", "boot"))         #미리 패키지 다운
 
 library(tidyverse)
 library(gridExtra)
@@ -16,7 +17,7 @@ library(rpart)
 library(boot)
 
 
-
+#분류의 지표로 사용하는 이항편차를 계산하는 함수.
 
 binomial_deviance <- function(y_obs, yhat){
   epsilon = 0.0001
@@ -28,10 +29,7 @@ binomial_deviance <- function(y_obs, yhat){
 }
 
 
-
-
-# curl https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data > adult.data
-# curl  https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.names > adult.names
+#파일 불러오기
 
 adult <- read.csv("adult.data", header = FALSE, strip.white = TRUE)
 names(adult) <- c('age', 'workclass', 'fnlwgt', 'education',
@@ -41,14 +39,29 @@ names(adult) <- c('age', 'workclass', 'fnlwgt', 'education',
                   'hours_per_week', 'native_country',
                   'wage')
 
-
 glimpse(adult)
+
+#Rows: 32,561
+#Columns: 15
 
 summary(adult)
 
+adult$workclass <- as.factor(adult$workclass)
+adult$education <- as.factor(adult$education)
+adult$marital_status <- as.factor(adult$marital_status)
+adult$occupation <- as.factor(adult$occupation)
+adult$relationship <- as.factor(adult$relationship)
+adult$race <- as.factor(adult$race)
+adult$sex <- as.factor(adult$sex)
+adult$native_country<- as.factor(adult$native_country)
+adult$wage <- as.factor(adult$wage)
+                                                    #문자형 변수를 범주형으로 변경. 
+glimpse(adult)
+
 levels(adult$wage)
 
-# 8.3.3. 범주형 설명변수에서 문제의 복잡도
+##########################################범주형 변수를 분리하여 모델행렬화 하기. 
+          #레벨 수 k 일 때 k-1개의 변수로 분리한다.
 
 levels(adult$race)
 adult$race[1:5]
